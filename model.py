@@ -1,9 +1,4 @@
-from io import BytesIO
-
 import torch
-import requests
-from PIL import Image
-
 from diffusers import StableDiffusionPipeline
 
 
@@ -17,13 +12,13 @@ class Model:
         self.pipe.enable_attention_slicing()
 
     def generate(self, pipeline, params):
-        prompt = params['prompt']
-        image = params['init_img']
-        mask_image = params['mask_img']
-        negative_prompt = params['negative_prompt']
-        guidance_scale = params['guidance_scale']
-        num_inference_steps = params['num_inference_steps']
-        num_images_per_prompt = params['num_images_per_prompt']
+        prompt = params.get('prompt')
+        image = params.get('init_img')
+        mask_image = params.get('mask_img')
+        negative_prompt = params.get('negative_prompt')
+        guidance_scale = params.get('guidance_scale')
+        num_inference_steps = params.get('num_inference_steps')
+        num_images_per_prompt = params.get('num_images_per_prompt')
         if pipeline == 'text2img':
             return self.pipe.text2img(prompt=prompt, negative_prompt=negative_prompt, guidance_scale=guidance_scale,
                                       num_inference_steps=num_inference_steps,
