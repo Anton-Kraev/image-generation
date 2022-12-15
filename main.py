@@ -22,7 +22,7 @@ def main():
     with st.sidebar:
         task = st.selectbox('Select task', ('text2img', 'img2img', 'inpaint'))
         if task not in st.session_state.keys():
-            st.session_state[task] = {'result': None, 'loading_step': 0}
+            st.session_state[task] = {'result': None}
         state = st.session_state[task]
 
         settings, advanced_settings = st.tabs(['Settings', 'Advanced settings'])
@@ -41,10 +41,15 @@ def main():
                                                     key=task + 'Negative prompt')
             state['guidance_scale'] = st.slider(label='Guidance scale', min_value=0., max_value=15.,
                                                 value=state.get('guidance_scale') or 7.5, step=0.5,
-                                                key=task + 'Guidance scale')
+                                                help='Higher guidance scale encourages to generate images that are '
+                                                     'closely linked to the text prompt, usually at the expense of '
+                                                     'lower image quality.', key=task + 'Guidance scale')
             state['num_inference_steps'] = st.slider(label='Number of inference steps', min_value=1, max_value=100,
                                                      value=state.get('num_inference_steps') or 20,
-                                                     key=task + 'Number of inference steps')
+                                                     key=task + 'Number of inference steps',
+                                                     help='The number of denoising steps. More denoising steps usually '
+                                                          'lead to a higher quality image at the expense of slower '
+                                                          'inference.')
             state['num_images_per_prompt'] = st.slider(label='Number of result images', min_value=1, max_value=8,
                                                        value=state.get('num_images_per_prompt') or 1,
                                                        key=task + 'Number of result images')
@@ -54,7 +59,10 @@ def main():
 
     if state.get('result'):
         st.subheader('Result')
-        st.image(state['result'][0])
+        images = state['result']
+        cols = st.columns(2 if len(images) > 1 else 1)
+        for i, img in enumerate(images):
+            cols[i % 2].image(img)
     else:
         st.caption('In all samples used *Guidance scale = 7.5* and *Number of inference steps = 50*')
         st.title(f'Sample of *{task}* usage')
