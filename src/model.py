@@ -5,10 +5,10 @@ from diffusers import StableDiffusionPipeline
 class Model:
     def __init__(self):
         self.pipe = StableDiffusionPipeline.from_pretrained(
-            "C:\\Users\\anton\\stable-diffusion-v1-4",
-            custom_pipeline="stable_diffusion_mega",
+            'CompVis/stable-diffusion-v1-4',
+            custom_pipeline='stable_diffusion_mega',
         )
-        self.pipe.to("cuda" if torch.cuda.is_available() else "cpu")
+        self.pipe.to('cuda' if torch.cuda.is_available() else 'cpu')
         self.pipe.enable_attention_slicing()
 
     def generate(self, pipeline, params):
